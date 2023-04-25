@@ -274,7 +274,7 @@ def wavefront(grid, n_rows, n_cols):
         else:
             return None 
     #identify and list the coordinates of each empty cell in the grid -> [row,col] of empty cells
-    empty_cells = empty_cell_list(grid)
+    #empty_cells = empty_cell_list(grid)
     # print(empty_cells)
     ##calculates the possible values for each empty cell in the grid, returns the grid with all possible values of unknown cells listed
     ##replaces the unknown cells with a list of possible values for that position 
@@ -286,6 +286,7 @@ def wavefront(grid, n_rows, n_cols):
     #print(grid)
     #print(empty_cells_in_order)
     ####cell_with_multiple_opts = []
+    print(grid)
     for i in empty_cells_in_order:  #for the number of items in the list of 'Empty_cells' - so for each empty cell listed
         #run the recursive solve function, except: 
         #-the cells are approached in order of the number of possible values
@@ -307,37 +308,57 @@ def wavefront(grid, n_rows, n_cols):
                 if len(j)>3: #if the cell has more than one possible value 
                     if j[0] == i[0]: #if the cell has the same row value
             ###NEED TO ONLY ACCESS THE ELEMENTS AFTER THE FIRST TWO ELEMENTS IN A GRID
-                        for poss_val in grid[j[0]][j[1]]:
-                       #     print ('possible value:', poss_val)
-                        #    print ('value to remove:', i[2])
-                         #   print ('all poss vals(listed in grid):', grid[j[0]][j[1]])
-                            if poss_val == i[2]:
-                                remove_same_poss(grid[j[0]][j[1]], i[2])
-                                
-                                print('1', grid[j[0]][j[1]])
-                                # grid[j[0]][j[1]].remove(i[2])
+                        if type(grid[j[0]][j[1]]) == list:
+                            if len(grid[j[0]][j[1]]) >1:
+                                for poss_val in grid[j[0]][j[1]]:
+                                    print ('possible value:', poss_val)
+                                    print ('value to remove:', i[2])
+                                    print ('all poss vals(listed in grid):', grid[j[0]][j[1]])
+                                    if poss_val == i[2]:
+                                        remove_same_poss(grid[j[0]][j[1]], i[2])
+                                        j.remove(poss_val)
+                                        #print('1', grid[j[0]][j[1]])
+                                        if len(grid[j[0]][j[1]]) == 1:
+                                            grid[j[0]][j[1]] = j[2]
+                                            empty_cells_in_order.remove(j)
+                                            print ('1', grid) 
                                 #remove the cells new value from the list of potential cells for other cells in the same row
 		    #isolate the column index and equate to i[2]
                     if j[1] == i[1]: #if the cell has the same column value
-                        for poss_val in grid[j[0]][j[1]]:
-                            if poss_val == i[2]:
-                                remove_same_poss(grid[j[0]][j[1]], i[2])
-                                print('2', grid[j[0]][j[1]])
-
+                        if type(grid[j[0]][j[1]]) == list:
+                            if len(grid[j[0]][j[1]]) >1:                        
+                                for poss_val in grid[j[0]][j[1]]:
+                                    if poss_val == i[2]:
+                                        remove_same_poss(grid[j[0]][j[1]], i[2])
+                                        j.remove(poss_val)
+                                        #print('2', grid[j[0]][j[1]])
+                                        if len(grid[j[0]][j[1]]) == 1:
+                                            grid[j[0]][j[1]] = j[2]
+                                            empty_cells_in_order.remove(j)
+                                            print ('2', grid) 
             #identify the cells in the same square as the cell and equate to i[2]
                 #if the column section of the two values are the same:
                     square_int_i = same_square_check (i[0], i[1], n_rows, n_cols) #gives the square i is in 
                     square_int_j = same_square_check (j[0], j[1], n_rows, n_cols) # give the square j is in 
                     if square_int_i == square_int_j:
-                        for poss_val in grid[j[0]][j[1]]:
-                            if poss_val == i[2]:
-                                remove_same_poss(grid[j[0]][j[1]], i[2]) 
-                                print('3', grid[j[0]][j[1]])
+                        if type(grid[j[0]][j[1]]) == list:
+                            if len(grid[j[0]][j[1]]) >1:                                                
+                                for poss_val in grid[j[0]][j[1]]:
+                                    if poss_val == i[2]:
+                                        remove_same_poss(grid[j[0]][j[1]], i[2]) 
+                                        j.remove(poss_val)
+                                        #print('3', grid[j[0]][j[1]])
+                                        if len(grid[j[0]][j[1]]) == 1:
+                                            grid[j[0]][j[1]] = j[2]
+                                            empty_cells_in_order.remove(j)
+                                            print ('3', grid)
+
                # print ('after removing:',i[2], ', from poss vals, grid:', grid[j[0]][j[1]])
                 #print (grid)
-                if len(grid[i[0]][i[1]]) == 1:
+                #if type(grid[i[0]][i[1]]) == list:
+                 #   if len (grid[i[0]][i[1]]) == 1:
                     #replace the value of the cell with the only possible value:
-                    grid[i[0]][i[1]] = i[2]
+                    #    grid[i[0]][i[1]] = i[2]
             print ('new grid:', np.array(grid))
                 ##      grid[j[0]][j[1]].remove(i[2])
           #  print (empty_cells_in_order)
@@ -351,5 +372,5 @@ def wavefront(grid, n_rows, n_cols):
  #   solved = 
   #  return True if solved else False
 
-wavefront(grid5, 2, 2)
+wavefront(grid6, 2, 3)
 
