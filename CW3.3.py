@@ -5,7 +5,7 @@ Created on Tue Apr 11 22:09:39 2023
 
 @author: finlaymichael
 """
-
+import argparse
 import sys
 import random
 import copy
@@ -86,6 +86,8 @@ def recursive_solver(grid, explain=False):
     for i in possible_options:
         #place each possible value into the grid
         grid[n_rows][n_cols] = i
+        #if output_file:
+          #  grid_to_file(grid, output_file)
         if explain is True:
             print("Put", i,"in location (",n_rows+1,",", n_cols+1,")") 
         #attempt to solve the sudoku
@@ -97,8 +99,8 @@ def recursive_solver(grid, explain=False):
         #If we couldn't find a solution, that must mean this value is incorrect.
         #Reset the grid for the next iteration of the loop
         grid[n_rows][n_cols] = 0  
-        if explain is True:
-            print("for (", n_rows, n_cols, "),", i,"doesn't work, so we backtrack")
+        #if explain is True:
+            #print("for (", n_rows, n_cols, "),", i,"doesn't work, so we backtrack")
     
     return None  # Unable to solve the puzzle
 
@@ -238,25 +240,116 @@ def check_solution(board, n_rows, n_cols):
 	return True
 
 
+
+
+
+
 def main():
-    for (i, (grid, n_rows, n_cols)) in enumerate(grids):
-        explain = False
-        if len(sys.argv) > 1 and sys.argv[1] == '-explain':
+    
+    points = 0
+    print("Running test script for coursework 1")
+	
+    print("====================================")
+    
+    if len(sys.argv) == 1:
+        for (i, (grid, n_rows, n_cols)) in enumerate(grids):
+            start_time = time.time()
+            explain = False
+            solution = recursive_solver(grid, explain)
+            elapsed_time = time.time() - start_time
+            print("Solved in: %f seconds" % elapsed_time)
+            if solution is not None:
+                for i in solution:
+                    print(i) 
+            else:
+                print("Solution is unsolvable")
+            if check_solution(solution, n_rows, n_cols):
+                print("grid %d correct" % (i+1))
+    			
+                points = points + 10
+            else:
+                print("grid %d incorrect" % (i+1))
+    
+    if len(sys.argv) == 2 and sys.argv[1] == '-explain':
+        for (i, (grid, n_rows, n_cols)) in enumerate(grids):
+            start_time = time.time()
             explain = True
+            solution = recursive_solver(grid, explain)
+            elapsed_time = time.time() - start_time
+            print("Solved in: %f seconds" % elapsed_time)
+            if solution is not None:
+                for i in solution:
+                    print(i)
+            else:
+                print("Solution is unsolvable")
+            if check_solution(solution, n_rows, n_cols):
+                print("grid is correct")
+            else:
+                print("grid is incorrect")
+    
+    if sys.argv[1] == '-file':
+        input_file = sys.argv[2]
+        output_file = sys.argv[3]
+        start_time = time.time()
+        explain = False  
+        with open(input_file, 'r') as f:
+            grid = [[int(cell) for cell in line.strip().split(",")] for line in f.readlines()]
+        
         solution = recursive_solver(grid, explain)
+        elapsed_time = time.time() - start_time
+        print("Solved in: %f seconds" % elapsed_time)
+        
+        with open(output_file, 'w') as f:
+            for i in solution:
+                f.write(",".join(str(cell) for cell in i) + "\n")
+    
+        
         if solution is not None:
             for i in solution:
-                print(i)
+                    print(i)
+        
+        
         else:
             print("Solution is unsolvable")
         if check_solution(solution, n_rows, n_cols):
             print("grid is correct")
         else:
             print("grid is incorrect")
-        
-   
     
-   
+    if len(sys.argv) > 1 and sys.argv[1] == '-explain':
+        if len(sys.argv) > 1 and sys.argv[2] == '-file':
+            start_time = time.time()
+            explain = True
+            input_file = sys.argv[3]
+            output_file = sys.argv[4]
+                
+            with open(input_file, 'r') as f:
+                grid = [[int(cell) for cell in line.strip().split(",")] for line in f.readlines()]
+            
+            solution = recursive_solver(grid, explain)
+            elapsed_time = time.time() - start_time
+            print("Solved in: %f seconds" % elapsed_time)
+            with open(output_file, 'w') as f:
+                for i in solution:
+                    f.write(",".join(str(cell) for cell in i) + "\n")
+        
+            
+            if solution is not None:
+                for i in solution:
+                    print(i)
+            else:
+                print("Solution is unsolvable")
+            if check_solution(solution, n_rows, n_cols):
+                print("grid is correct")
+            else:
+                print("grid is incorrect")
+    
+    print("====================================")
+	
+    
+    print("Test script complete, Total points: %d" % points)
+
+
 if __name__ == "__main__":
     main()
 
