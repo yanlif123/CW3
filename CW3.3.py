@@ -68,38 +68,40 @@ grid6 = [
 grids = [(puzzle, 3, 3), (grid6, 2, 3)]
 
 
-def recursive_solver(grid, explain=False, explain_str=""):
+def recursive_solver(grid, explain=False, explanation=""):
     """
     Solves a Sudoku puzzle using recursive backtracking starting with the empty cell with the least possible options
     """
     #Finding the empty cell with the fewest possible values
-    #explain_str = ""
+    
     n_rows, n_cols = find_min_remaining_values(grid)
     
     #If there are no empty cells, the puzzle is solved
     if n_rows is None:
-        return grid, explain_str
+        return grid, explanation
     
     possible_options = find_possible_options(grid, n_rows, n_cols) #working out the possible values for the cell with the minimum possible values in the grid
     
     if not possible_options:
-        return None, explain_str
+        return None, explanation
     
-    indent_str = " "
+    space = " "
     for i in possible_options:
-        #place each possible value into the gri./d
+        #place each possible value into the grid
         grid[n_rows][n_cols] = i
+        #if the explain flag exists in the command line, append the action of the solver into the 'explanation' string
         if explain is True:
-            if explain_str:
-                explain_str += "  "
-            explain_str += f'{indent_str} Put {i} in location ({n_rows+1},{n_cols+1})'
+            if explanation:
+                explanation += "  "
+            explanation += f'{space} Put {i} in location ({n_rows+1},{n_cols+1})'
 
         #attempt to solve the sudoku
-        result, sub_explain_str = recursive_solver(grid, explain)
-        explain_str += sub_explain_str
+        result, sub_explanation = recursive_solver(grid, explain)
+        #adding the explanation for this specific cell position and number into the overall 'explanation' string
+        explanation += sub_explanation
         #if the sudoku is solved, return the solved grid
         if result is not None:
-            return result, explain_str
+            return result, explanation
         
         #If we couldn't find a solution, that must mean this value is incorrect.
         #Reset the grid for the next iteration of the loop
@@ -107,7 +109,7 @@ def recursive_solver(grid, explain=False, explain_str=""):
         #if explain is True:
             #print("for (", n_rows, n_cols, "),", i,"doesn't work, so we backtrack")
     
-    return None, explain_str  # Unable to solve the puzzle
+    return None, explanation  # Unable to solve the puzzle
 
 
 def find_possible_options(grid, n_rows, n_cols):
@@ -270,11 +272,12 @@ def main():
 	
     print("====================================")
     
+    #parsing the code if there are no flags present
     if len(sys.argv) == 1:
         for (i, (grid, n_rows, n_cols)) in enumerate(grids):
             start_time = time.time()
             explain = False
-            solution = recursive_solver(grid, explain, explain_str="")[0]
+            solution = recursive_solver(grid, explain, explanation="")[0]
             elapsed_time = time.time() - start_time
             print("Solved in: %f seconds" % elapsed_time)
             if solution is not None:
@@ -291,16 +294,16 @@ def main():
                 print("grid is incorrect")
         print("Test script complete, Total points: %d" % points)      
             
-    
+    #parsing the code if there is only the explain flag present
     if len(sys.argv) == 2 and sys.argv[1] == '-explain':
         for (i, (grid, n_rows, n_cols)) in enumerate(grids):
             start_time = time.time()
             explain = True
-            solution, explain_str = recursive_solver(grid, explain, explain_str="")
+            solution, explanation = recursive_solver(grid, explain, explanation="")
             elapsed_time = time.time() - start_time
             print("Solved in: %f seconds" % elapsed_time)
             if solution is not None:
-                print(explain_str)
+                print(explanation)
                 for i in solution:
                     print(i)
             else:
@@ -312,6 +315,7 @@ def main():
                 print("grid is incorrect")
         print("Test script complete, Total points: %d" % points)
     
+    #parsing the code if there is only the file flag present
     if len(sys.argv) > 1 and sys.argv[1] == '-file':
         input_file = sys.argv[2]
         output_file = sys.argv[3]
@@ -320,8 +324,9 @@ def main():
         with open(input_file, 'r') as f:
             grid = [[int(cell) for cell in line.strip().split(",")] for line in f.readlines()]
         
-        solution, explain_str = recursive_solver(grid, explain)
+        solution, explanation = recursive_solver(grid, explain)
         
+        #working out the nxm size of a box in the grid
         n_rows = int(len(solution) ** 0.5)
         n_cols = int(len(solution[0]) // n_rows)
         
@@ -329,7 +334,7 @@ def main():
         print("Solved in: %f seconds" % elapsed_time)
         
         with open(output_file, 'w') as f:
-            f.write(explain_str)
+            f.write(explanation)
             for i in solution:
                 f.write(",".join(str(cell) for cell in i) + "\n")
     
@@ -346,7 +351,7 @@ def main():
         print("Test script complete, Total points: %d" % points)
 
 
-
+    #parsing the code if both the explain and file flags are present - enter them in the command line in this order
     if len(sys.argv) > 2 and sys.argv[1] == '-explain' and sys.argv[2] == '-file':
         #if len(sys.argv) > 1 and sys.argv[2] == '-file':
             
@@ -358,15 +363,16 @@ def main():
             with open(input_file, 'r') as f:
                 grid = [[int(cell) for cell in line.strip().split(",")] for line in f.readlines()]
             
-            solution, explain_str = recursive_solver(grid, explain)
+            solution, explanation = recursive_solver(grid, explain)
             
+            #working out the nxm size of a box in the grid
             n_rows = int(len(solution) ** 0.5)
             n_cols = int(len(solution[0]) // n_rows)
             
             elapsed_time = time.time() - start_time
             print("Solved in: %f seconds" % elapsed_time)
             with open(output_file, 'w') as f:
-                f.write(explain_str)
+                f.write(explanation)
                 for i in solution:
                     f.write(",".join(str(cell) for cell in i) + "\n")
                 
