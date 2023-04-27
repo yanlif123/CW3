@@ -105,26 +105,35 @@ def recursive_solver(grid, explain=False):
 
 
 def find_possible_options(grid, n_rows, n_cols):
-    
+    """
+    This function returns the list of possible values for a certain nxn cell position on the sudoku board
+    """
     #first create a list of all the possible values for the nxn grid
     possible_values = [i for i in range(1, len(grid[n_rows]) + 1)]
     
+    #working out the values in the row already used
     for i in range(len(grid[n_rows])):
         if grid[n_rows][i] in possible_values:
             possible_values.remove(grid[n_rows][i])
-
+    
+    #working out the values in the column already used
     for i in range(len(grid[n_rows])):
         if grid[i][n_cols] in possible_values:
             possible_values.remove(grid[i][n_cols])
+      
             
     box_value = int(len(grid) ** 0.5)
+    
+    #working out the position of the top left cell of the box that the grid position is in
     first_row = (n_rows // box_value) * box_value
     first_column = (n_cols // (len(grid[n_rows]) // box_value)) * (len(grid[n_rows]) // box_value)
     
+    #working out the values in the box that have already been used
     for i in range(first_row, first_row + box_value):
         for j in range(first_column, first_column + (len(grid[n_rows]) // box_value)):
             if grid[i][j] in possible_values:
                 possible_values.remove(grid[i][j])
+    
     
     return list(possible_values)
                        
@@ -238,7 +247,7 @@ def check_solution(board, n_rows, n_cols):
 	return True
 
 
-<<<<<<< HEAD
+
 #def check_sol(grid):
     
     
@@ -317,28 +326,8 @@ def main():
                 f.write(",".join(str(cell) for cell in i) + "\n")
     
         
-=======
-def main():
-    for (i, (grid, n_rows, n_cols)) in enumerate(grids):
-        explain = False
-        if len(sys.argv) > 1 and sys.argv[1] == '-explain':
-            explain = True
-        solution = recursive_solver(grid, explain)
->>>>>>> 5e8e704a452cc9758845cdd011e18d22dde37874
-        if solution is not None:
-            for i in solution:
-                print(i)
-        else:
-            print("Solution is unsolvable")
-        if check_solution(solution, n_rows, n_cols):
-            print("grid is correct")
-            points = points + 10
-            
-        else:
-            print("grid is incorrect")
-<<<<<<< HEAD
-        print("Test script complete, Total points: %d" % points)
-    
+
+
     if len(sys.argv) > 2 and sys.argv[1] == '-explain' and sys.argv[2] == '-file':
         #if len(sys.argv) > 1 and sys.argv[2] == '-file':
             
@@ -380,12 +369,7 @@ def main():
     #print("Test script complete, Total points: %d" % points)
 
 
-=======
-        
-   
-    
-   
->>>>>>> 5e8e704a452cc9758845cdd011e18d22dde37874
+
 if __name__ == "__main__":
     main()
 
