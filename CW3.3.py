@@ -5,7 +5,7 @@ Created on Tue Apr 11 22:09:39 2023
 
 @author: finlaymichael
 """
-import argparse
+
 import sys
 import random
 import copy
@@ -87,8 +87,6 @@ def recursive_solver(grid, explain=False):
     for i in possible_options:
         #place each possible value into the grid
         grid[n_rows][n_cols] = i
-        #if output_file:
-          #  grid_to_file(grid, output_file)
         if explain is True:
             print("Put", i,"in location (",n_rows+1,",", n_cols+1,")") 
         #attempt to solve the sudoku
@@ -100,8 +98,8 @@ def recursive_solver(grid, explain=False):
         #If we couldn't find a solution, that must mean this value is incorrect.
         #Reset the grid for the next iteration of the loop
         grid[n_rows][n_cols] = 0  
-        #if explain is True:
-            #print("for (", n_rows, n_cols, "),", i,"doesn't work, so we backtrack")
+        if explain is True:
+            print("for (", n_rows, n_cols, "),", i,"doesn't work, so we backtrack")
     
     return None  # Unable to solve the puzzle
 
@@ -240,6 +238,7 @@ def check_solution(board, n_rows, n_cols):
 	return True
 
 
+<<<<<<< HEAD
 #def check_sol(grid):
     
     
@@ -318,11 +317,17 @@ def main():
                 f.write(",".join(str(cell) for cell in i) + "\n")
     
         
+=======
+def main():
+    for (i, (grid, n_rows, n_cols)) in enumerate(grids):
+        explain = False
+        if len(sys.argv) > 1 and sys.argv[1] == '-explain':
+            explain = True
+        solution = recursive_solver(grid, explain)
+>>>>>>> 5e8e704a452cc9758845cdd011e18d22dde37874
         if solution is not None:
             for i in solution:
-                    print(i)
-        
-        
+                print(i)
         else:
             print("Solution is unsolvable")
         if check_solution(solution, n_rows, n_cols):
@@ -331,6 +336,7 @@ def main():
             
         else:
             print("grid is incorrect")
+<<<<<<< HEAD
         print("Test script complete, Total points: %d" % points)
     
     if len(sys.argv) > 2 and sys.argv[1] == '-explain' and sys.argv[2] == '-file':
@@ -374,6 +380,12 @@ def main():
     #print("Test script complete, Total points: %d" % points)
 
 
+=======
+        
+   
+    
+   
+>>>>>>> 5e8e704a452cc9758845cdd011e18d22dde37874
 if __name__ == "__main__":
     main()
 
