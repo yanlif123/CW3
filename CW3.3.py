@@ -24,6 +24,7 @@ puzzle = [
     [0, 3, 1, 0, 0, 8, 0, 5, 7],
 ]
 
+
 grid1 = [
 		[1, 0, 4, 2],
 		[4, 2, 1, 3],
@@ -210,7 +211,6 @@ def get_squares(grid, n_rows, n_cols):
 
 	return(squares)
 
-
 def check_solution(board, n_rows, n_cols):
 	'''
 	This function is used to check whether a sudoku board has been correctly solved
@@ -240,6 +240,11 @@ def check_solution(board, n_rows, n_cols):
 	return True
 
 
+#def check_sol(grid):
+    
+    
+
+
 
 
 
@@ -264,11 +269,14 @@ def main():
             else:
                 print("Solution is unsolvable")
             if check_solution(solution, n_rows, n_cols):
-                print("grid %d correct" % (i+1))
+                print("grid is correct")
     			
                 points = points + 10
+                
             else:
-                print("grid %d incorrect" % (i+1))
+                print("grid is incorrect")
+        print("Test script complete, Total points: %d" % points)      
+            
     
     if len(sys.argv) == 2 and sys.argv[1] == '-explain':
         for (i, (grid, n_rows, n_cols)) in enumerate(grids):
@@ -284,10 +292,12 @@ def main():
                 print("Solution is unsolvable")
             if check_solution(solution, n_rows, n_cols):
                 print("grid is correct")
+                points = points + 10
             else:
                 print("grid is incorrect")
+        print("Test script complete, Total points: %d" % points)
     
-    if sys.argv[1] == '-file':
+    if len(sys.argv) > 1 and sys.argv[1] == '-file':
         input_file = sys.argv[2]
         output_file = sys.argv[3]
         start_time = time.time()
@@ -296,6 +306,10 @@ def main():
             grid = [[int(cell) for cell in line.strip().split(",")] for line in f.readlines()]
         
         solution = recursive_solver(grid, explain)
+        
+        n_rows = int(len(solution) ** 0.5)
+        n_cols = int(len(solution[0]) // n_rows)
+        
         elapsed_time = time.time() - start_time
         print("Solved in: %f seconds" % elapsed_time)
         
@@ -313,11 +327,15 @@ def main():
             print("Solution is unsolvable")
         if check_solution(solution, n_rows, n_cols):
             print("grid is correct")
+            points = points + 10
+            
         else:
             print("grid is incorrect")
+        print("Test script complete, Total points: %d" % points)
     
-    if len(sys.argv) > 1 and sys.argv[1] == '-explain':
-        if len(sys.argv) > 1 and sys.argv[2] == '-file':
+    if len(sys.argv) > 2 and sys.argv[1] == '-explain' and sys.argv[2] == '-file':
+        #if len(sys.argv) > 1 and sys.argv[2] == '-file':
+            
             start_time = time.time()
             explain = True
             input_file = sys.argv[3]
@@ -327,6 +345,10 @@ def main():
                 grid = [[int(cell) for cell in line.strip().split(",")] for line in f.readlines()]
             
             solution = recursive_solver(grid, explain)
+            
+            n_rows = int(len(solution) ** 0.5)
+            n_cols = int(len(solution[0]) // n_rows)
+            
             elapsed_time = time.time() - start_time
             print("Solved in: %f seconds" % elapsed_time)
             with open(output_file, 'w') as f:
@@ -341,13 +363,15 @@ def main():
                 print("Solution is unsolvable")
             if check_solution(solution, n_rows, n_cols):
                 print("grid is correct")
+                points = points + 10
             else:
                 print("grid is incorrect")
+            print("Test script complete, Total points: %d" % points)
     
-    print("====================================")
+   # print("====================================")
 	
     
-    print("Test script complete, Total points: %d" % points)
+    #print("Test script complete, Total points: %d" % points)
 
 
 if __name__ == "__main__":
