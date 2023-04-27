@@ -67,41 +67,47 @@ grid6 = [
 
 grids = [(puzzle, 3, 3), (grid6, 2, 3)]
 
-def recursive_solver(grid, explain=False):
+
+def recursive_solver(grid, explain=False, explain_str=""):
     """
     Solves a Sudoku puzzle using recursive backtracking starting with the empty cell with the least possible options
     """
     #Finding the empty cell with the fewest possible values
+    #explain_str = ""
     n_rows, n_cols = find_min_remaining_values(grid)
     
     #If there are no empty cells, the puzzle is solved
     if n_rows is None:
-        return grid
+        return grid, explain_str
     
     possible_options = find_possible_options(grid, n_rows, n_cols) #working out the possible values for the cell with the minimum possible values in the grid
     
     if not possible_options:
-        return None
+        return None, explain_str
     
-    
+    indent_str = " "
     for i in possible_options:
-        #place each possible value into the grid
+        #place each possible value into the gri./d
         grid[n_rows][n_cols] = i
         if explain is True:
-            print("Put", i,"in location (",n_rows+1,",", n_cols+1,")") 
+            if explain_str:
+                explain_str += "  "
+            explain_str += f'{indent_str} Put {i} in location ({n_rows+1},{n_cols+1})'
+
         #attempt to solve the sudoku
-        result = recursive_solver(grid, explain)
+        result, sub_explain_str = recursive_solver(grid, explain)
+        explain_str += sub_explain_str
         #if the sudoku is solved, return the solved grid
         if result is not None:
-            return result
+            return result, explain_str
         
         #If we couldn't find a solution, that must mean this value is incorrect.
         #Reset the grid for the next iteration of the loop
         grid[n_rows][n_cols] = 0  
-        if explain is True:
-            print("for (", n_rows, n_cols, "),", i,"doesn't work, so we backtrack")
+        #if explain is True:
+            #print("for (", n_rows, n_cols, "),", i,"doesn't work, so we backtrack")
     
-    return None  # Unable to solve the puzzle
+    return None, explain_str  # Unable to solve the puzzle
 
 
 def find_possible_options(grid, n_rows, n_cols):
@@ -268,7 +274,7 @@ def main():
         for (i, (grid, n_rows, n_cols)) in enumerate(grids):
             start_time = time.time()
             explain = False
-            solution = recursive_solver(grid, explain)
+            solution = recursive_solver(grid, explain, explain_str="")[0]
             elapsed_time = time.time() - start_time
             print("Solved in: %f seconds" % elapsed_time)
             if solution is not None:
@@ -290,10 +296,11 @@ def main():
         for (i, (grid, n_rows, n_cols)) in enumerate(grids):
             start_time = time.time()
             explain = True
-            solution = recursive_solver(grid, explain)
+            solution, explain_str = recursive_solver(grid, explain, explain_str="")
             elapsed_time = time.time() - start_time
             print("Solved in: %f seconds" % elapsed_time)
             if solution is not None:
+                print(explain_str)
                 for i in solution:
                     print(i)
             else:
@@ -313,7 +320,7 @@ def main():
         with open(input_file, 'r') as f:
             grid = [[int(cell) for cell in line.strip().split(",")] for line in f.readlines()]
         
-        solution = recursive_solver(grid, explain)
+        solution, explain_str = recursive_solver(grid, explain)
         
         n_rows = int(len(solution) ** 0.5)
         n_cols = int(len(solution[0]) // n_rows)
@@ -322,10 +329,22 @@ def main():
         print("Solved in: %f seconds" % elapsed_time)
         
         with open(output_file, 'w') as f:
+            f.write(explain_str)
             for i in solution:
                 f.write(",".join(str(cell) for cell in i) + "\n")
     
-        
+        if solution is not None:
+            for i in solution:
+                print(i)
+        else:
+            print("Solution is unsolvable")
+        if check_solution(solution, n_rows, n_cols):
+            print("grid is correct")
+            points = points + 10
+        else:
+            print("grid is incorrect")
+        print("Test script complete, Total points: %d" % points)
+
 
 
     if len(sys.argv) > 2 and sys.argv[1] == '-explain' and sys.argv[2] == '-file':
@@ -339,7 +358,7 @@ def main():
             with open(input_file, 'r') as f:
                 grid = [[int(cell) for cell in line.strip().split(",")] for line in f.readlines()]
             
-            solution = recursive_solver(grid, explain)
+            solution, explain_str = recursive_solver(grid, explain)
             
             n_rows = int(len(solution) ** 0.5)
             n_cols = int(len(solution[0]) // n_rows)
@@ -347,9 +366,10 @@ def main():
             elapsed_time = time.time() - start_time
             print("Solved in: %f seconds" % elapsed_time)
             with open(output_file, 'w') as f:
+                f.write(explain_str)
                 for i in solution:
                     f.write(",".join(str(cell) for cell in i) + "\n")
-        
+                
             
             if solution is not None:
                 for i in solution:
