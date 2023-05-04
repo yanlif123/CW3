@@ -5,7 +5,7 @@ Created on Tue Apr 11 22:09:39 2023
 
 @author: finlaymichael
 """
-
+import numpy as np
 import matplotlib.pyplot as plt
 import sys
 import random
@@ -135,6 +135,24 @@ def find_possible_options(grid, n_rows, n_cols):
     return list(possible_values)
                        
 
+def find_empty(grid):
+	'''
+	This function returns the index (i, j) to the first zero element in a sudoku grid
+	If no such element is found, it returns None
+	args: grid
+	return: A tuple (i,j) where i and j are both integers, or None
+	'''
+
+	for i in range(len(grid)):
+		row = grid[i]
+		for j in range(len(row)):
+			if grid[i][j] == 0:
+				return (i, j)
+
+	return None
+
+
+
 
 def empty_cell_list(board):
     '''
@@ -247,7 +265,71 @@ def check_solution(board, n_rows, n_cols):
 
 #def check_sol(grid):
     
+def poss(grid, n_rows, n_cols,i,j):
+
+	'''returns a list of viable values for empty spaces in the grid based on the values already present in the row,column and subgrid.
+	Takes the same arguments as recursive_solve() and also i,j which is the location of the empty space that is being operated on.
+	This i, j is the output of the find_empty() function.'''
+
+	length = len(grid)
+	# creating a nested list for each subgrid in the grid, uses the fact that the nuber of subgrids is equal to the number of elements in one direction.
+	subgrids = [[] for list in range(length)]
+	# Uing n_rows and n_cols provided as division lines for the subgrids in the grid.
+	gridline_y = n_rows
+	gridline_x = n_cols
+	#iterating across each element to assign it to a nested list for its subgrid
+	for row in range(0, length):
+		# Using gridlines to assign a 'sub x and y index' to the elements based on their location:
+		# e.g. for grid1 (2x2) elements on the left of gridline get sub x index 0 (0//2 = 1//2 = 0)
+		# and on the right of the  gridline they get sub x index 1. The same applies to the vertical gridline.
+		sub_Y_ind = row // gridline_y
+		for col in range(0, length):
+			sub_X_ind = col // gridline_x
+
+			# Used trial and error to find this formula, It uses the sub x index and sub y index of the element to build a number
+			# corresponding to an index for the nested lists in the subgrid.
+			# E.g. for top left subgrid in grid sub_x_ind = sub_y_ind = 0 so then sub_num = 0.
+			# for bottom left subgrid: sub_x_ind = 0, sub_y_ind = 1 so sub_num = 2*1 + 0 = 2.
+			# So the elements in the first and third subgrids go into the first and third nested list.
+
+			sub_num = gridline_y * sub_Y_ind + sub_X_ind
+			subgrids[sub_num].append(grid[row][col])
+
+	# Using the formula used above to find the index of the subgrid of the empty space in question
+	sub_partic = gridline_y * (i // gridline_y) + (j // gridline_x)
+	# Building lists of values in the same row, column and subgrid of the empty space in question.
+	neigh_col = [grid[k][j] for k in range(0, len(grid))]
+	neigh_row = grid[i]
+	neigh_sub = subgrids[sub_partic]
+	neighbours = neigh_col + neigh_row + neigh_sub
+	# Building a list of viable values for the empty space in question.
+	viable = [x for x in range(0,len(grid)+1) if x not in neighbours]
+	return viable
+
+def min(grid,n_rows,n_cols):
+	'''
+	Inputs:
+		grid, dimensions.
+	Returns:
+		A list of lists, sorted by length, each of which contains
+		the row and column of the empty cell in question as the first
+		two elements and then all possible numbers for that element.
+	'''
+
+	# Creating adding the possible numbers to the empty cell list to create
+	# 'hybrid' lists.
+	empties = empty_cell_list(grid)
+	for i in empties:
+		for j in poss(grid,n_rows,n_cols,i[0],i[1]):
+			i.append(j)
+	# sorting the hybrid nested lists by length
+	empties.sort(key=len)
+	return empties
     
+
+
+
+
 
 def graph(graph_vals, matrix):
     graph_vals.sort(key=lambda x: x[0])
@@ -281,11 +363,17 @@ def graph(graph_vals, matrix):
     
 def hint(empty_list, board):
     hint_num = int(sys.argv[2])
-    random_list = random.sample(range(0,len(empty_list)-1),(len(empty_list)-hint_num))
-    for i in range(len(random_list)):
+    if hint_num >= len(empty_list):
+        return board
+    list_a = np.arange(0, len(empty_list)-1).tolist()
+    random_list = random.sample(list_a, len(empty_list)-(len(empty_list)-hint_num))
+    print(empty_list)
+    print(random_list, "random list")
+    for i in range(0,(len(random_list)-1)):
         empty_list.pop(random_list[i])
-    for j in range(len(empty_list)):
-        board[empty_list[i][0]][empty_list[i][1]] = 0
+    print(empty_list, "empty list")
+    for j in range(0, len(empty_list)-1):
+        board[empty_list[j][0]][empty_list[j][1]] = 0
     return board 
 
 
@@ -446,7 +534,7 @@ def main():
                     print(i)
             else:
                 print("Solution is unsolvable")
-            if check_solution(solution, n_rows, n_cols):
+            if check_solution(solution[0], n_rows, n_cols):
                 print("grid is correct")
                 points = points + 10
             else:
@@ -494,7 +582,11 @@ def main():
                 print("Test script complete, Total points: %d" % points)
     
     
-        
+        if len(sys.argv) > 1 and sys.argv[1] == "-hint":
+                empties = empty_cell_list(grid)
+                solution = recursive_solver(grid, explain)
+                hint_solution = hint(empties, grid)
+                print("new grid")
    
 if __name__ == "__main__":
     main()
