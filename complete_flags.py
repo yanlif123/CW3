@@ -156,18 +156,6 @@ def empty_cell_list(board):
                 empties.append((row, col))
     return empties
 
-def empty_cell_list_2(board):
-    """
-    Returns a list of coordinates for the empty cells in a Sudoku board.
-    """
-    empties = []
-    for row in range(len(board)):
-        for col in range(len(board[row])):
-            if board[row][col] == 0:
-                empties.append([row, col])
-
-    return empties
-
 
 def find_min_remaining_values(board):
     '''
@@ -213,7 +201,8 @@ def get_squares(grid, n_rows, n_cols):
 def check_solution(board, n_rows, n_cols):
 	'''
 	This function is used to check whether a sudoku board has been correctly solved
-	args: grid - representation of a suduko board as a nested list.
+	args: board - representation of a suduko board as a nested list.
+        n_rows and n_cols - used to find size of box
 	returns: True (correct solution) or False (incorrect solution)
 	'''
 	n = n_rows*n_cols
@@ -240,26 +229,28 @@ def check_solution(board, n_rows, n_cols):
 
 def graph(graph_vals, matrix):
     '''
-    Outputs a graph showing the performance of different sized sudokus
+    Outputs a graph showing the performance of different sized sudokus with different starting difficulties
+    args: graph_vals - a nested list containing the average performance time across 3 attempts and the difficulty defined by number of empty spaces
+           matrix - the matrix of the suduko e.g. (2x2, 3x2, 3x3)
+    returns: plots a graph
     
     '''
     
-    graph_vals.sort(key=lambda x: x[0])
-    #print(graph_vals)
+    graph_vals.sort(key=lambda x: x[0])#sorts graph vals into ascending order
 
     plt.style.use('ggplot')
 
     difficulty_num = []
     time_val = []
 
-    for element in range(0,len(graph_vals)):
+    for element in range(0,len(graph_vals)):#splits the graph vals nested list into their respective lists to be placed on the graph
         time_val.append(graph_vals[element][0])
         difficulty_num.append(graph_vals[element][1])
 
     x_pos = [i for i, _ in enumerate(difficulty_num)]
 
     plt.bar(x_pos, time_val, color='blue', width=0.1)
-    if matrix == 4:
+    if matrix == 4:# specifying what grid size is being shown
         plt.xlabel("2x2 Matrix")
     if matrix == 6:
         plt.xlabel("3x2 Matrix")
@@ -277,44 +268,49 @@ def graph(graph_vals, matrix):
 def hint(empty_list, board, explain, file):
     '''
     Returns the sudoku board solved up to however many cells is specified in the command line
+    args: empty_list - a list of the vector values of every empty cell on the board
+          board - suduko nested list 
+          explain - a booleon variable to state if the function explains the hints or not (True and False respectively)
+          file - a booleon variable to state if the the function takes a file input aswell as explaining the hints
+    returns: board - board with N number of spaces filled based on the variable hint_num
+             explanation -explanation of where the hints go and what they are
     '''
-    hint_num = int(sys.argv[2])
-    if hint_num >= len(empty_list):
+    hint_num = int(sys.argv[2]) #pulls the number of hints down from the command line
+
+    if hint_num >= len(empty_list):#if the number of hints is greater than the number of spaces it will return the completed board
         if explain == True:
             for i in explainer_v2(board, empty_list, explain = True):
                 print(i)
+        if file == True:
+            explanation = '\n'.join([''.join(map(str, i)) for i in explainer_v2(board, empty_list, explain = True)])
+            return(board, explanation) 
         return board
+    
     list_a = np.arange(0, len(empty_list)).tolist()
-    random_list = random.sample(list_a, hint_num)
+    random_list = random.sample(list_a, hint_num) #random list of numbers to create a random hint everytime
    
-    explain_list = []
+    explain_list = []#list of the position vectors of the hints used to explain the returned board
     
     for hint in range(0,(len(random_list))):
-        explain_list.append(empty_list[random_list[hint]])
+        explain_list.append(empty_list[random_list[hint]]) 
    
-    
-   
-    new_empty_list = []
+    new_empty_list = [] #empty list with all position vectors other than the hinted spaces
+
     for i in range(0, (len(empty_list))):
         if i not in random_list:
             new_empty_list.append(empty_list[i])
-        
-    
     
     for j in range(0, len(new_empty_list)):
-        board[new_empty_list[j][0]][new_empty_list[j][1]] = 0
+        board[new_empty_list[j][0]][new_empty_list[j][1]] = 0# sets all but the hinted spaces to 0 (empty)
     
-    if explain == True:
-        
+    if explain == True: 
         for i in explainer_v2(board, explain_list, explain = True):
             print(i)
+
     if file == True:
-        explanation = '\n'.join([''.join(map(str, i)) for i in explainer_v2(board, explain_list, explain = True)])
-        print(explanation)
+        explanation = '\n'.join([''.join(map(str, i)) for i in explainer_v2(board, explain_list, explain = True)])        
         return(board, explanation)
         
-        
-    
     return board
 
 
