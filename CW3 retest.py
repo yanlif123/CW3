@@ -277,119 +277,164 @@ def if_same_index(grid, first_cell_index, sec_cell_index, empty_cells_in_order):
                             grid [j[0]][j[1]] = j[2]
                             empty_cells_in_order.remove(j) 
 
+def is_solved(grid):
+    for row in grid:
+        for cell in row:
+            if isinstance(cell,int): #has more than one possible value for that section
+                return True    
+    
+    # Check if there is any lists left instead of an int
+ #   solved = 
+  #  return True if solved else False
 
 
+#def is_solved(grid): #checks if the grid is solved - in terms of no more same numbers in same row, column or squ
 
 def wavefront(grid, n_rows, n_cols):
     #check that there are empty spaces in the grid:
-    empty = find_empty(grid)
-    if not empty:#### and is_solved(grid):
-        if check_solution(grid, n_rows, n_cols):
-            return grid
-        else:
-            return None 
     #identify and list the coordinates of each empty cell in the grid -> [row,col] of empty cells
-    #empty_cells = empty_cell_list(grid)
-    # print(empty_cells)
-    ##calculates the possible values for each empty cell in the grid, returns the grid with all possible values of unknown cells listed
-    ##replaces the unknown cells with a list of possible values for that position 
-    empty_cells_in_order = min(grid, n_rows, n_cols) #returns the (row, col, possible_vals) for each empty space, in order of number of possibilities   
-    # print(empty_cells_in_order)
+    lists_in_grid = any(isinstance(cell, list) for row in grid for cell in row) #checks for list in a nested grid 
+    if lists_in_grid == False:
+        if check_solution(grid, n_rows, n_cols): ###AND IF THERE ARE NO LISTS IN THE GRID
+            return grid
+    #replace the unknown cells with a list of possible values for that position
+    empty_cells_in_order = min(grid, n_rows, n_cols) #returns the (row, col, possible_vals) for each empty space, in order of number of possibilities 
+    print ('empty cells:', empty_cells_in_order)
     for i in empty_cells_in_order:
        # print(i) #to check 
-        grid[i[0]][i[1]] = i[2:]   #replces the '0' representing an empty cell with all the possible values for that empty cell
-    #print(grid)
-    print(empty_cells_in_order)
-    ####cell_with_multiple_opts = []
+        grid[i[0]][i[1]] = i[2:] #replces the '0' representing an empty cell with all the possible values for that empty cell
+    #if is_solved(grid)==False:
+    #for n in range (5):
+     #   print (n, 'empty cells list length', len(empty_cells_in_order))
     for i in empty_cells_in_order:  #for the number of items in the list of 'Empty_cells' - so for each empty cell listed
         #run the recursive solve function, except: 
         #-the cells are approached in order of the number of possible values
         #-once the right value of the cell is found, remove that possible value from other unknown cells in the same row or column
         ###1 if the cell has only one possible value 
         #input(i)
-        if len(grid[i[0]][i[1]]) == 1:
+           # print(empty_cells_in_order)
+           # print('i', i)
+        if type(grid[i[0]][i[1]]) == list:
+            if len(grid[i[0]][i[1]]) == 1:
         #replace the value of the cell with the only possible value:
-            print ('1:', 'place', i[0], i[1], 'replaced with', i[2])
-            grid[i[0]][i[1]] = i[2]
-            #remove the cell from the list of empty cells (as it has to be that value) - list then becomes a list of cells with more than one possible value
-    #    print(np.array(grid)) 
+                print ('1:', 'place', i[0], i[1], 'replaced with', i[2])
+                grid[i[0]][i[1]] = i[2]
         ####if is_solved(grid):
           ####  return grid
         ####else:
-            #### wavefront(grid,n_rows,n_cols)
-           # print (' The row value of the empty cell iterating through i[0]:', i[0])
-            for j in empty_cells_in_order: #for each cell listed in empty grid list 
-            #    print('The row value of all cells listed under empty_cells list j[0]:', j[0])
-                if len(j)>3: #if the cell has more than one possible value 
-                    if j[0] == i[0]: #if the cell has the same row value
-            ###NEED TO ONLY ACCESS THE ELEMENTS AFTER THE FIRST TWO ELEMENTS IN A GRID
-                        if type(grid[j[0]][j[1]]) == list:
-                            if len(grid[j[0]][j[1]]) >1:
-                                for poss_val in grid[j[0]][j[1]]:
+                for j in empty_cells_in_order: #for each cell listed in empty grid list 
+                    if i != j:
+                        print ('i:', i, 'j:', j)
+                        if len(j)>3: #if the cell has more than one possible value 
+                            if j[0] == i[0]: #if the cell has the same row value
+                                if type(grid[j[0]][j[1]]) == list:  
+                                    if len(grid[j[0]][j[1]]) >1: #if there is more than one possible value for that cell in the grid
+                                        for poss_val in grid[j[0]][j[1]]:
                                    # print ('possible value:', poss_val)
                                     #print ('value to remove:', i[2])
                                     #print ('all poss vals(listed in grid):', grid[j[0]][j[1]])
-                                    if poss_val == i[2]:
-                                        remove_same_poss(grid[j[0]][j[1]], i[2])
-                                        j[2:].remove(poss_val)
-                                        if len(grid[j[0]][j[1]]) == 1:
-                                            print ('2:', 'place', j[0], j[1], 'replaced with', j[2])
-                                            grid[j[0]][j[1]] = j[2]
-                                            empty_cells_in_order.remove(j)
+                                    #remove the cells new value from the list of potential cells for other cells in the same row
+                                            if poss_val == i[2]:
+                                                remove_same_poss(grid[j[0]][j[1]], i[2])
+                                                print(j)
+                                                j = [x for z, x in enumerate (j) if z>1 or x!=i[2]]
+                                                #j[2:].remove(i[2])
+                                                print ('2: poss vals now:', j[2:])
+                                                if type(grid[j[0]][j[1]]) == list:
+                                                    if len(grid[j[0]][j[1]]) == 1:
+                                                        print ('2:', 'place', j[0], j[1], 'removed', i[2], 'replaced with', j[2])
+                                                        grid[j[0]][j[1]] = j[2]
+                                                        empty_cells_in_order.remove(j)
+                                                #print(empty_cells_in_order)
+                    #if cell has the same column index and has the same cell value
+                        if len(j)>3:
+                            if j[1] == i[1]: #if the cell has the same column value
+                                if type(grid[j[0]][j[1]]) == list:
+                                    if len(grid[j[0]][j[1]]) > 1:
+                                        for poss_val in grid[j[0]][j[1]]:
+                                            if poss_val == i[2]:
+                                                remove_same_poss(grid[j[0]][j[1]], poss_val)
+                                                j = [x for z, x in enumerate (j) if z>1 or x!=i[2]]
+                                                #j[2:].remove(i[2])
+                                                print ('3: poss vals now:', j[2:])
+                                                print (grid[j[0]][j[1]])
+                                                print (type(grid[j[0]][j[1]]))
+                                                if type(grid[j[0]][j[1]])==list:
+                                                    if len(grid[j[0]][j[1]]) == 1:
+                                                        print ('3:', 'place', j[0], j[1],'removed', i[2], 'replaced with', j[2])
+                                                        grid[j[0]][j[1]] = j[2]
+                                                        empty_cells_in_order.remove(j)
+                                                        #print(np.array(grid))
 
-                    
-                                # grid[j[0]][j[1]].remove(i[2])
-                                #remove the cells new value from the list of potential cells for other cells in the same row
-		    #isolate the column index and equate to i[2]
-                if len(j)>3:
-                    if j[1] == i[1]: #if the cell has the same column value
-                        if type(grid[j[0]][j[1]]) == list:
-                            if len(grid[j[0]][j[1]]) >1:
-                                for poss_val in grid[j[0]][j[1]]:
-                                    if poss_val == i[2]:
-                                        remove_same_poss(grid[j[0]][j[1]], i[2])
-                                        j[2:].remove(poss_val)
-                                        if len(grid[j[0]][j[1]])==1:
-                                            print ('3:', 'place', j[0], j[1], 'replaced with', j[2])
-                                            grid[j[0]][j[1]] = j[2]
-                                            empty_cells_in_order.remove(j)
-
-
-                    square_int_i = same_square_check(i[0], i[1], n_rows, n_cols)
-                    square_int_j = same_square_check(j[0], j[1], n_rows, n_cols)
-                    #print ('after removing:',i[2], 'grid:', grid[j[0]][j[1]])
-                    if square_int_i == square_int_j:
-                        if type(grid[j[0]][j[1]]) ==list:
-                            if len(grid[j[0]][j[1]]) >1:
-                                for poss_val in grid[j[0]][j[1]]:
-                                    if poss_val == i[2]:
-                                        remove_same_poss(grid[j[0]][j[1]], i[2])
-                                        j[2:].remove(poss_val)
-                                        if len(grid[j[0]][j[1]]) == 1:
-                                            print ('4:', 'place', j[0], j[1], 'replaced with', j[2])
-                                            grid [j[0]][j[1]] = j[2]
-                                            empty_cells_in_order.remove(j)
-
-    print(np.array(grid))  
-
+                    #if a cell in the same square has a same possible value 
+                        if len(j)>3:
+                            square_int_i = same_square_check(i[0], i[1], n_rows, n_cols)
+                            square_int_j = same_square_check(j[0], j[1], n_rows, n_cols)
+                            if square_int_i == square_int_j:
+                                if type(grid[j[0]][j[1]]) ==list:
+                                    if len(grid[j[0]][j[1]]) >1:
+                                        for poss_val in grid[j[0]][j[1]]:
+                                            if poss_val == i[2]:
+                                                remove_same_poss(grid[j[0]][j[1]], i[2])
+                                                j = [x for z, x in enumerate (j) if z>1 and x!=i[2]]
+                                               # j = j[j[2:].remove(i[2])]
+                                                print ('4: poss vals now:', j[2:])
+                                                if len(grid[j[0]][j[1]]) == 1:
+                                                    print ('4:', 'place', j[0], j[1],'removed', i[2], 'replaced with', j[2])
+                                                    grid [j[0]][j[1]] = j[2]
+                                                    empty_cells_in_order.remove(j)
+    
+    #print(empty_cells_in_order)
+                #if i in empty_cells_in_order:
+                 #   empty_cells_in_order.remove(i) 
+               # else:
+                #    continue
+        
+    
+   # print (np.array(grid)) 
+    #lists_in_grid_after = any(isinstance(cell, list) for row in grid for cell in row) #checks for list in a nested grid 
+            print (np.array(grid))  
+    #if there are lists still in the grid, re-run the min function for grid 
+    #check if there are any elements in list of unknowns with only one possible value
+    #if so, replace unknowns with zero(so you can run wavefront again) then run wavefront again 
     for row in range(0, n_rows*n_cols):
         for col in range(0, n_rows*n_cols):
             if isinstance(grid[row][col], list):
                 grid[row][col] = 0
-    empty_cells_in_order_2 = min(grid, n_rows, n_cols)
-                if len(empty_cells_in_order_2[0])==3:
+                empty_cells_in_order_2 = min(grid, n_rows, n_cols) #returns the (row, col, possible_vals) for each empty space, in order of number of possibilities 
+                #print (empty_cells_in_order_2)
+                if len(empty_cells_in_order_2[0]) == 3: 
                     wavefront(grid, n_rows, n_cols)
+                        
+                  #      wavefront(grid, n_rows, n_cols)
+                    
+    print (np.array(grid))  
+           
+    #if any(isinstance(grid[i[0]][i[1]], list) for row in grid for cell in row):
+    #print (grid)
     #wavefront(grid, n_rows, n_cols)
+    #wavefront(grid, n_rows, n_cols)          
+         
+   # if is_solved(grid) == False:
+    #    for row in grid:
+     #       for cell in row:
+      #          if type(cell) == list:
+       #             cell == 0     
+                                    
+   # wavefront(grid, n_rows, n_cols)
+
            # print (grid)
              #   print (grid)
                 ##      grid[j[0]][j[1]].remove(i[2])
           #  print (empty_cells_in_order)
-    print (np.array(grid))
 
 
-#def is_solved(grid):
+
+    
+
     # Check if there is any lists left instead of an int
  #   solved = 
   #  return True if solved else False
 
 wavefront(grid5, 2, 2)
+

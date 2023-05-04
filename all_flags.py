@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Tue Apr 11 22:09:39 2023
+Created on Sun Apr 30 16:45:59 2023
 
 @author: finlaymichael
 """
 
+#import matplotlib as plt
+#import matplotlib.style
 import matplotlib.pyplot as plt
 import sys
 import random
 import copy
 import time
 import math
-#import matplotlib.pyplot as plt; plt.rcdefaults()
-import matplotlib.pyplot as plt
 #Grids 1-4 are 2x2
 
 grid1 = [
@@ -57,12 +57,7 @@ grid6 = [
 grids = [(grid1, 2, 2), (grid2, 2, 2), (grid3, 2, 2), (grid4, 2, 2), (grid5, 2, 2), (grid6, 2, 3)]
 
 
-<<<<<<< HEAD
-#grids = [(puzzle, 3, 3), (grid6, 2, 3)]
-grids = [(grid1, 2, 2), (grid2, 2, 2), (grid3, 2, 2), (grid4, 2, 2), (grid5, 2, 2), (grid6, 3, 2), (puzzle, 3, 3)]
-=======
 
->>>>>>> 880a2d7f5af9e06e3253d9d0d6365fa21647c92f
 
 def recursive_solver(grid, explain=False, explanation=""):
     """
@@ -110,7 +105,7 @@ def recursive_solver(grid, explain=False, explanation=""):
 
 def find_possible_options(grid, n_rows, n_cols):
     """
-    Returns a list of possible values for a certain nxm cell position on the sudoku board
+    This function returns the list of possible values for a certain nxn cell position on the sudoku board
     """
     #first create a list of all the possible values for the nxn grid
     possible_values = [i for i in range(1, len(grid[n_rows]) + 1)]
@@ -255,52 +250,12 @@ def check_solution(board, n_rows, n_cols):
 #def check_sol(grid):
     
     
+
 def graph(graph_vals, matrix):
     graph_vals.sort(key=lambda x: x[0])
     #print(graph_vals)
     
     plt.style.use('ggplot')
-
-<<<<<<< HEAD
-    difficulty_num = []
-    time_val = []
-    
-    for element in range(0,len(graph_vals)):
-        time_val.append(graph_vals[element][0])
-        difficulty_num.append(graph_vals[element][1])
-
-    x_pos = [i for i, _ in enumerate(difficulty_num)]
-
-    plt.bar(x_pos, time_val, color='blue', width=0.1)
-    if matrix == 4:
-        plt.xlabel("2x2 Matrix")
-    if matrix == 6:
-        plt.xlabel("3x2 Matrix")
-    if matrix == 9:
-        plt.xlabel("3x3 Matrix")
-    plt.ylabel("Averaged Time")
-    plt.title("Suduko solver performance indicator")
-
-    plt.xticks(x_pos, difficulty_num)
-
-    plt.show()
-    
-    
-def hint(empty_list, board):
-    hint_num = int(sys.argv[2])
-    random_list = random.sample(range(0,len(empty_list)-1),(len(empty_list)-hint_num))
-    for i in range(len(random_list)):
-        empty_list.pop(random_list[i])
-    for j in range(len(empty_list)):
-        board[empty_list[i][0]][empty_list[i][1]] = 0
-    return board 
-=======
-def graph(graph_vals, matrix):
-    graph_vals.sort(key=lambda x: x[0])
-    #print(graph_vals)
-    
-    plt.style.use('ggplot')
->>>>>>> 880a2d7f5af9e06e3253d9d0d6365fa21647c92f
 
     difficulty_num = []
     time_val = []
@@ -339,14 +294,6 @@ def hint(empty_list, board):
 
 
 def main():
-
-    position_2x2 = 0
-    position_3x2 = 0
-    position_3x3 = 0
-    
-    input_2x2 = []
-    input_3x2 = []
-    input_3x3 = []
     
     position_2x2 = 0
     position_3x2 = 0
@@ -367,72 +314,9 @@ def main():
         if arg == "-profile":
             only_profile = True
     
-    #parsing the code so that if the profile flag is present among others, it will be the only flag that is parsed
     if only_profile:
         for (i, (grid, n_rows, n_cols)) in enumerate(grids):
             explain = False
-<<<<<<< HEAD
-            solution = recursive_solver(grid, explain, explanation="")[0]
-            elapsed_time = time.time() - start_time
-            print("Solved in: %f seconds" % elapsed_time)
-            if solution is not None:
-                for i in solution:
-                    print(i) 
-            else:
-                print("Solution is unsolvable")
-            if check_solution(solution, n_rows, n_cols):
-                print("grid is correct")
-    			
-                points = points + 10
-                
-            else:
-                print("grid is incorrect")
-        print("Test script complete, Total points: %d" % points)  
-
-    if len(sys.argv) > 1 and sys.argv[1] == "-hint":
-            empties = empty_cell_list(grid)
-            solution = recursive_solver(grid, explain)
-            hint_solution = hint(empties, grid)
-            if hint_solution is not None:
-                for i in hint_solution:
-                    print(i)
-    
-    if len(sys.argv) > 1 and sys.argv[1] == '-profile':
-            
-            time_vals = []
-            difficulty = len(empty_cell_list(grid))
-            for timed in range(0,2):
-                start_time = time.time()
-                recursive_solver(grid, explain)
-                elapsed_time = time.time() - start_time
-                time_vals.append(elapsed_time)
-            averaged_time = sum(time_vals) / len(time_vals)
-        
-            if grids[i][1]*grids[i][2] == 4:
-                input_2x2.append([]) #adds an empty slot to the nested list
-                input_2x2[position_2x2].extend([averaged_time, difficulty])#fills that empty slot with the graph vals
-                position_2x2 = position_2x2 + 1
-            
-            if grids[i][1]*grids[i][2] == 6:
-                input_3x2.append([]) #adds an empty slot to the nested list
-                input_3x2[position_3x2].extend([averaged_time, difficulty])#fills that empty slot with the graph vals
-                position_3x2 = position_3x2 + 1
-            
-            if grids[i][1]*grids[i][2] == 9:
-                input_3x3.append([]) #adds an empty slot to the nested list
-                input_3x3[position_3x3].extend([averaged_time, difficulty])#fills that empty slot with the graph vals
-                position_3x3 = position_3x3 + 1
-                
-            if i == (len(grids) - 1):
-                graph(input_2x2, 4)
-                graph(input_3x2, 6)
-                graph(input_3x3, 9)
-            
-    #parsing the code if there is only the explain flag present
-    if len(sys.argv) == 2 and sys.argv[1] == '-explain':
-        for (i, (grid, n_rows, n_cols)) in enumerate(grids):
-=======
->>>>>>> 880a2d7f5af9e06e3253d9d0d6365fa21647c92f
             start_time = time.time()
             time_vals = []
             difficulty = len(empty_cell_list(grid))
@@ -486,9 +370,8 @@ def main():
             print("Test script complete, Total points: %d" % points)
     
             
-   
+    #parsing the code if there are no flags present
     else:   
-        #parsing the code if there are no flags present
         if len(sys.argv) == 1:
             for (i, (grid, n_rows, n_cols)) in enumerate(grids):
                 print(grid)
@@ -611,9 +494,22 @@ def main():
                 print("Test script complete, Total points: %d" % points)
     
     
+        if len(sys.argv) > 1 and sys.argv[1] == "-hint":
+            for (i, (grid, n_rows, n_cols)) in enumerate(grids):
+                explain = False
         
+                empties = empty_cell_list(grid)
+                solution = recursive_solver(grid, explain)
+                hint_solution = hint(empties, grid)
+                if hint_solution is not None:
+                    for i in hint_solution:
+                        print(i)
+                    
    
 if __name__ == "__main__":
     main()
+
+
+
 
 

@@ -1,19 +1,18 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Tue Apr 11 22:09:39 2023
+Created on Tue May  2 13:13:17 2023
 
 @author: finlaymichael
 """
 
+import numpy as np
 import matplotlib.pyplot as plt
 import sys
 import random
 import copy
 import time
 import math
-#import matplotlib.pyplot as plt; plt.rcdefaults()
-import matplotlib.pyplot as plt
 #Grids 1-4 are 2x2
 
 grid1 = [
@@ -57,55 +56,48 @@ grid6 = [
 grids = [(grid1, 2, 2), (grid2, 2, 2), (grid3, 2, 2), (grid4, 2, 2), (grid5, 2, 2), (grid6, 2, 3)]
 
 
-<<<<<<< HEAD
-#grids = [(puzzle, 3, 3), (grid6, 2, 3)]
-grids = [(grid1, 2, 2), (grid2, 2, 2), (grid3, 2, 2), (grid4, 2, 2), (grid5, 2, 2), (grid6, 3, 2), (puzzle, 3, 3)]
-=======
 
->>>>>>> 880a2d7f5af9e06e3253d9d0d6365fa21647c92f
 
-def recursive_solver(grid, explain=False, explanation=""):
+def recursive_solver(grid):
     """
     Solves a Sudoku puzzle using recursive backtracking starting with the empty cell with the least possible options
     """
     #Finding the empty cell with the fewest possible values
-    
-    n_rows, n_cols = find_min_remaining_values(grid)
+    copy = grid
+    n_rows, n_cols = find_min_remaining_values(copy)
     
     #If there are no empty cells, the puzzle is solved
     if n_rows is None:
-        return grid, explanation
+        return copy
     
-    possible_options = find_possible_options(grid, n_rows, n_cols) #working out the possible values for the cell with the minimum possible values in the grid
+    possible_options = find_possible_options(copy, n_rows, n_cols) #working out the possible values for the cell with the minimum possible values in the grid
     
     if not possible_options:
-        return None, explanation
+        return None
     
-    space = " "
+    
     for i in possible_options:
         #place each possible value into the grid
-        grid[n_rows][n_cols] = i
+        copy[n_rows][n_cols] = i
         #if the explain flag exists in the command line, append the action of the solver into the 'explanation' string
-        if explain is True:
-            if explanation:
-                explanation += "  "
-            explanation += f'{space} Put {i} in location ({n_rows+1},{n_cols+1})'
+        
 
         #attempt to solve the sudoku
-        result, sub_explanation = recursive_solver(grid, explain)
+        result = recursive_solver(copy)
+        
         #adding the explanation for this specific cell position and number into the overall 'explanation' string
-        explanation += sub_explanation
+        
         #if the sudoku is solved, return the solved grid
         if result is not None:
-            return result, explanation
+            return result
         
         #If we couldn't find a solution, that must mean this value is incorrect.
         #Reset the grid for the next iteration of the loop
-        grid[n_rows][n_cols] = 0  
+        copy[n_rows][n_cols] = 0  
         #if explain is True:
             #print("for (", n_rows, n_cols, "),", i,"doesn't work, so we backtrack")
     
-    return None, explanation  # Unable to solve the puzzle
+    return None  # Unable to solve the puzzle
 
 
 def find_possible_options(grid, n_rows, n_cols):
@@ -142,33 +134,62 @@ def find_possible_options(grid, n_rows, n_cols):
     return list(possible_values)
                        
 
+def find_empty(grid):
+	'''
+	This function returns the index (i, j) to the first zero element in a sudoku grid
+	If no such element is found, it returns None
+	args: grid
+	return: A tuple (i,j) where i and j are both integers, or None
+	'''
 
+	for i in range(len(grid)):
+		row = grid[i]
+		for j in range(len(row)):
+			if grid[i][j] == 0:
+				return (i, j)
+
+	return None
+
+
+
+
+#def empty_cell_list(board):
+#    '''
+    
+#    Parameters
+#    ----------
+#    board : TYPE           nested list
+      #      DESCRIPTION.   unfinished suduko grid displayed as a nested list
+##    Returns
+#    -------
+ #   empties : TYPE         nested list
+ #       DESCRIPTION        list of coordinates for the empty spaces in board
+#    '''
+#    #iterates across the passed board and returns the position vector of any empty spaces
+    
+#    position = 0
+#    empties = []
+#    for row in range(len(board)):
+#        for col in range(len(board[row])):
+ #           if board[row][col] == 0:
+ #               empties.append([]) #adds an empty slot to the nested list
+ #               empties[position].extend([row, col])#fills that empty slot with a coord
+ #               position = position + 1
+    
+ #   return empties           
+    
 def empty_cell_list(board):
-    '''
-    
-    Parameters
-    ----------
-    board : TYPE           nested list
-            DESCRIPTION.   unfinished suduko grid displayed as a nested list
-    Returns
-    -------
-    empties : TYPE         nested list
-        DESCRIPTION        list of coordinates for the empty spaces in board
-    '''
-    #iterates across the passed board and returns the position vector of any empty spaces
-    
-    position = 0
+    """
+    Returns a list of coordinates for the empty cells in a Sudoku board.
+    """
     empties = []
     for row in range(len(board)):
         for col in range(len(board[row])):
             if board[row][col] == 0:
-                empties.append([]) #adds an empty slot to the nested list
-                empties[position].extend([row, col])#fills that empty slot with a coord
-                position = position + 1
-    
-    return empties           
-    
-                
+                empties.append((row, col))
+    return empties
+
+
 def find_min_remaining_values(board):
     '''
     
@@ -254,53 +275,13 @@ def check_solution(board, n_rows, n_cols):
 
 #def check_sol(grid):
     
-    
+
+
 def graph(graph_vals, matrix):
     graph_vals.sort(key=lambda x: x[0])
     #print(graph_vals)
     
     plt.style.use('ggplot')
-
-<<<<<<< HEAD
-    difficulty_num = []
-    time_val = []
-    
-    for element in range(0,len(graph_vals)):
-        time_val.append(graph_vals[element][0])
-        difficulty_num.append(graph_vals[element][1])
-
-    x_pos = [i for i, _ in enumerate(difficulty_num)]
-
-    plt.bar(x_pos, time_val, color='blue', width=0.1)
-    if matrix == 4:
-        plt.xlabel("2x2 Matrix")
-    if matrix == 6:
-        plt.xlabel("3x2 Matrix")
-    if matrix == 9:
-        plt.xlabel("3x3 Matrix")
-    plt.ylabel("Averaged Time")
-    plt.title("Suduko solver performance indicator")
-
-    plt.xticks(x_pos, difficulty_num)
-
-    plt.show()
-    
-    
-def hint(empty_list, board):
-    hint_num = int(sys.argv[2])
-    random_list = random.sample(range(0,len(empty_list)-1),(len(empty_list)-hint_num))
-    for i in range(len(random_list)):
-        empty_list.pop(random_list[i])
-    for j in range(len(empty_list)):
-        board[empty_list[i][0]][empty_list[i][1]] = 0
-    return board 
-=======
-def graph(graph_vals, matrix):
-    graph_vals.sort(key=lambda x: x[0])
-    #print(graph_vals)
-    
-    plt.style.use('ggplot')
->>>>>>> 880a2d7f5af9e06e3253d9d0d6365fa21647c92f
 
     difficulty_num = []
     time_val = []
@@ -328,25 +309,84 @@ def graph(graph_vals, matrix):
     
 def hint(empty_list, board):
     hint_num = int(sys.argv[2])
-    random_list = random.sample(range(0,len(empty_list)-1),(len(empty_list)-hint_num))
-    for i in range(len(random_list)):
+    if hint_num >= len(empty_list):
+        return board
+    list_a = np.arange(0, len(empty_list)-1).tolist()
+    random_list = random.sample(list_a, len(empty_list)-(len(empty_list)-hint_num))
+    print(empty_list)
+    print(random_list, "random list")
+    for i in range(0,(len(random_list)-1)):
         empty_list.pop(random_list[i])
-    for j in range(len(empty_list)):
-        board[empty_list[i][0]][empty_list[i][1]] = 0
+    print(empty_list, "empty list")
+    for j in range(0, len(empty_list)-1):
+        board[empty_list[j][0]][empty_list[j][1]] = 0
     return board 
 
+
+def explainer(board, grid):
+    empty_list = empty_cell_list_2(grid)
+    print(empty_list)
+    explanations = []
+    
+    for i in empty_list:
+        row, col = i
+        
+        value = board[row][col]
+        print(value)
+        explanations.append(f"put {value} into ({row+1}, {col+1})")
+    
+    return explanations
+
+def explainer_v2(board, empty_list):
+    '''
+    Parameters
+    ----------
+    board : list
+        The Sudoku board, represented as a 2D list.
+    empty_list : list
+        A list of the empty cells in the board.
+    
+    Returns
+    -------
+    explanation : str
+        A string explaining the steps taken to solve the board.
+    '''
+    # Create a copy of the board so that the original board is not modified
+    #board_copy = [row[:] for row in board]
+    
+    # Use the recursive_solver function to solve the board
+    solved_board = recursive_solver(board)
+    
+    # If the board is unsolvable, return an error message
+    if board is None:
+        return "Error: Board is unsolvable."
+    
+    # Create a string to hold the explanation
+    explanation = []
+    
+    # Iterate through each empty cell and fill it with a valid value
+    for cell in empty_list:
+        row, col = cell
+        value = solved_board[row][col]
+        board[row][col] = value
+        explanation.append(f"Filled cell ({row}, {col}) with value {value}")
+        
+    # Check that the solved board is valid
+    return explanation
+
+
+def empty_cell_list_2(board):
+    empties = []
+    for row in range(len(board)):
+        for col in range(len(board[row])):
+            if board[row][col] == 0:
+                empties.append([row, col])
+    
+    return empties
 
 
 
 def main():
-
-    position_2x2 = 0
-    position_3x2 = 0
-    position_3x3 = 0
-    
-    input_2x2 = []
-    input_3x2 = []
-    input_3x3 = []
     
     position_2x2 = 0
     position_3x2 = 0
@@ -370,75 +410,13 @@ def main():
     #parsing the code so that if the profile flag is present among others, it will be the only flag that is parsed
     if only_profile:
         for (i, (grid, n_rows, n_cols)) in enumerate(grids):
-            explain = False
-<<<<<<< HEAD
-            solution = recursive_solver(grid, explain, explanation="")[0]
-            elapsed_time = time.time() - start_time
-            print("Solved in: %f seconds" % elapsed_time)
-            if solution is not None:
-                for i in solution:
-                    print(i) 
-            else:
-                print("Solution is unsolvable")
-            if check_solution(solution, n_rows, n_cols):
-                print("grid is correct")
-    			
-                points = points + 10
-                
-            else:
-                print("grid is incorrect")
-        print("Test script complete, Total points: %d" % points)  
-
-    if len(sys.argv) > 1 and sys.argv[1] == "-hint":
-            empties = empty_cell_list(grid)
-            solution = recursive_solver(grid, explain)
-            hint_solution = hint(empties, grid)
-            if hint_solution is not None:
-                for i in hint_solution:
-                    print(i)
-    
-    if len(sys.argv) > 1 and sys.argv[1] == '-profile':
             
-            time_vals = []
-            difficulty = len(empty_cell_list(grid))
-            for timed in range(0,2):
-                start_time = time.time()
-                recursive_solver(grid, explain)
-                elapsed_time = time.time() - start_time
-                time_vals.append(elapsed_time)
-            averaged_time = sum(time_vals) / len(time_vals)
-        
-            if grids[i][1]*grids[i][2] == 4:
-                input_2x2.append([]) #adds an empty slot to the nested list
-                input_2x2[position_2x2].extend([averaged_time, difficulty])#fills that empty slot with the graph vals
-                position_2x2 = position_2x2 + 1
-            
-            if grids[i][1]*grids[i][2] == 6:
-                input_3x2.append([]) #adds an empty slot to the nested list
-                input_3x2[position_3x2].extend([averaged_time, difficulty])#fills that empty slot with the graph vals
-                position_3x2 = position_3x2 + 1
-            
-            if grids[i][1]*grids[i][2] == 9:
-                input_3x3.append([]) #adds an empty slot to the nested list
-                input_3x3[position_3x3].extend([averaged_time, difficulty])#fills that empty slot with the graph vals
-                position_3x3 = position_3x3 + 1
-                
-            if i == (len(grids) - 1):
-                graph(input_2x2, 4)
-                graph(input_3x2, 6)
-                graph(input_3x3, 9)
-            
-    #parsing the code if there is only the explain flag present
-    if len(sys.argv) == 2 and sys.argv[1] == '-explain':
-        for (i, (grid, n_rows, n_cols)) in enumerate(grids):
-=======
->>>>>>> 880a2d7f5af9e06e3253d9d0d6365fa21647c92f
             start_time = time.time()
             time_vals = []
             difficulty = len(empty_cell_list(grid))
             for timed in range(0,2):
                 start_time = time.time()
-                recursive_solver(grid, explain)
+                recursive_solver(grid)
                 elapsed_time = time.time() - start_time
                 time_vals.append(elapsed_time)
                 averaged_time = sum(time_vals) / len(time_vals)
@@ -467,10 +445,10 @@ def main():
          
             elapsed_time = time.time() - start_time
             
-            solution = recursive_solver(grid, explain)[0]
+            solution = recursive_solver(grid)
         
             n_rows = int(len(solution) ** 0.5)
-            n_cols = int(len(solution[0]) // n_rows)
+            n_cols = int(len(solution) // n_rows)
         
             if solution is not None:
                 for i in solution:
@@ -493,10 +471,11 @@ def main():
             for (i, (grid, n_rows, n_cols)) in enumerate(grids):
                 print(grid)
                 start_time = time.time()
-                explain = False
-                solution = recursive_solver(grid, explain, explanation="")[0]
+                
+                solution = recursive_solver(grid)
                 elapsed_time = time.time() - start_time
-            
+                
+                
                 if solution is not None:
                     for i in solution:
                         print(i) 
@@ -515,15 +494,24 @@ def main():
         if len(sys.argv) == 2 and sys.argv[1] == '-explain':
             for (i, (grid, n_rows, n_cols)) in enumerate(grids):
                 print(grid)
+                
+                for i in explainer_v2(grid, empty_cell_list_2(grid)):
+                    print(i)
+                
+                
                 start_time = time.time()
-                explain = True
-                solution, explanation = recursive_solver(grid, explain, explanation="")
+                
+                solution = recursive_solver(grid)
+               
+                
                 elapsed_time = time.time() - start_time
             
                 if solution is not None:
-                    print(explanation)
+                    
                     for i in solution:
                         print(i)
+                
+                
                 else:
                     print("Solution is unsolvable")
                 if check_solution(solution, n_rows, n_cols):
@@ -539,22 +527,22 @@ def main():
             input_file = sys.argv[2]
             output_file = sys.argv[3]
             start_time = time.time()
-            explain = False  
+            
             with open(input_file, 'r') as f:
                 grid = [[int(cell) for cell in line.strip().split(",")] for line in f.readlines()]
         
             print(grid)
-            solution, explanation = recursive_solver(grid, explain)
+            solution = recursive_solver(grid)
         
         #working out the nxm size of a box in the grid
             n_rows = int(len(solution) ** 0.5)
-            n_cols = int(len(solution[0]) // n_rows)
+            n_cols = int(len(solution) // n_rows)
         
             elapsed_time = time.time() - start_time
             print("Solved in: %f seconds" % elapsed_time)
         
             with open(output_file, 'w') as f:
-                f.write(explanation)
+                
                 for i in solution:
                     f.write(",".join(str(cell) for cell in i) + "\n")
     
@@ -576,7 +564,7 @@ def main():
         #if len(sys.argv) > 1 and sys.argv[2] == '-file':
             
                 start_time = time.time()
-                explain = True
+                
                 input_file = sys.argv[3]
                 output_file = sys.argv[4]
                 
@@ -584,16 +572,26 @@ def main():
                     grid = [[int(cell) for cell in line.strip().split(",")] for line in f.readlines()]
             
                 print(grid)
-                solution, explanation = recursive_solver(grid, explain)
-            
+                
+                explanation = '\n'.join([''.join(map(str, i)) for i in explainer_v2(grid, empty_cell_list_2(grid))])
+                print(explanation)
+                
+                solution = recursive_solver(grid)
+                
+                
+                
             #working out the nxm size of a box in the grid
                 n_rows = int(len(solution) ** 0.5)
-                n_cols = int(len(solution[0]) // n_rows)
+                n_cols = int(len(solution) // n_rows)
             
                 elapsed_time = time.time() - start_time
                 print("Solved in: %f seconds" % elapsed_time)
                 with open(output_file, 'w') as f:
                     f.write(explanation)
+                    #for i in explainer_v2(grid, empty_cell_list_2(grid)):
+                        #f.write(' '.join(map(str, i)) + "\n")
+                            
+                    
                     for i in solution:
                         f.write(",".join(str(cell) for cell in i) + "\n")
                 
@@ -615,5 +613,4 @@ def main():
    
 if __name__ == "__main__":
     main()
-
 
