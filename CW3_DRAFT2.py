@@ -886,7 +886,7 @@ def main():
 					print("Completed in: %f seconds" % elapsed_time)
 				else:
 					print('Unable to add hints.')
-				print('Test script completed')
+			print('Test script completed')
 
 
 		# parsing the code if there is only the file flag present
