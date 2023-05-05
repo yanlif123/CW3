@@ -1,5 +1,6 @@
 # CW3
-This project codes for a Sudoku Solver. The code solves unsolved grids from an inputted file through terminal, as well as example grids included within the script.\ 
+This project codes for a Sudoku Solver. The code solves unsolved grids from an inputted file through terminal, as well as example grids included within the script.
+
 <sub> By Charlie Creasy, Finlay, Oliver F, Jyotika Kannan </sub>
 
 
