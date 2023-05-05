@@ -44,7 +44,7 @@ The function main extends the recursive_function for the user. Through this funt
     
     i.e.\
     -for **explain**  (to print solution and set of instructions to solve):\
-     In terminal, print "CW3.py -explain inputfile.txt output.txt
+     In terminal, print "CW3.py -explain"
      
     -for **file INPUT OUTPUT**  (to read sudoku grid from inputted file and save solved grid to output file):\
      In terminal, print "CW3.py -file input.txt output.txt"
@@ -52,10 +52,10 @@ The function main extends the recursive_function for the user. Through this funt
      -for **hint N**  (return a grid filled with *n* previously unknown locations):\
      In terminal, print "CW3.py -hint N input.txt output.txt"\
      e.g. for a number of 5 hints:\
-     In terminal, print "CW3.py -hint 5 input.txt output.txt"
+     In terminal, print "CW3.py -hint 5"
      
      -for **profile**  (measure time performance for solver over various grids, return a plot of average performance):\
-     In terminal, print "CW3.py -profile input.txt output.txt"
+     In terminal, print "CW3.py -profile"
      
      
  4) To call for multiple flags:
@@ -68,7 +68,7 @@ The function main extends the recursive_function for the user. Through this funt
       print "CW3.py -hint 5 -file input.txt output.txt'
       
      -for hint + explain:\
-      print "CW3.py -hint 5 -explain input.txt output.txt"
+      print "CW3.py -hint 5 -explain"
       
      -for explain + file:\
       print "CW3.py -explain -file input.txt output.txt'
