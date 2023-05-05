@@ -15,22 +15,22 @@ Wavefront uses the wavefront propogation method, where we find the locations in 
 
  -**main()**:\
 The function main extends the recursive_function for the user. Through this funtion, the user can call for the following flags:  **-explain**', **- file input output**, **-hint N**, and **-profile**. These flags can be run simultaneously.
-  Individually, when the flags are called:\
+  Individually, when the flags are called:
   - **explain**   
-    prints the solution to the inputted grid and a set of instructions for solving the puzzzle\
+    prints the solution to the inputted grid and a set of instructions for solving the puzzzle
   - **file input output**  
-    reads a grid from an inputted file, solves the grid, and saves the grid to another file named 'OUTPUT'.\
+    reads a grid from an inputted file, solves the grid, and saves the grid to another file named 'OUTPUT'.
   - **hint N**   
-    returns a partially filled grid by 'N' number of values.\
+    returns a partially filled grid by 'N' number of values.
   - **profile** 
     measures the time performance of the solver, for grids of various sizes and difficulties. It then averages the performance of the solver, summarises the results and returns a plot conveying these results.
   
   
 ### Usage
 
-1) To choose the algorithm with which to solve the grid:\
-    - open python script\
-    - edit within the function 'solve()':\
+1) To choose the algorithm with which to solve the grid:
+    - open python script
+    - edit within the function 'solve()':
       - for the **recursive** method: uncomment 'return recursive_solve(...)'. comment out other return lines for the 'solve' function \
       - for the **wavefront** method: uncomment either 'return wavefront(...)', or 'return list_solve(...)'. comment out the other two return lines under            the 'solve' function
         
@@ -38,7 +38,7 @@ The function main extends the recursive_function for the user. Through this funt
 2) Run the file from terminal. 
 
 
-3) To call for a flag:\
+3) To call for a flag:
 
     In terminal, print "CW3.py -flag inputfile.txt output.txt"
     
@@ -58,7 +58,7 @@ The function main extends the recursive_function for the user. Through this funt
      In terminal, print "CW3.py -profile input.txt output.txt"
      
      
- 4) To call for multiple flags:\
+ 4) To call for multiple flags:
  
     In terminal, the desired flags must be called in this order:\
     -hint  -explain  -file 
