@@ -15,15 +15,15 @@ Wavefront uses the wavefront propogation method, where we find the locations in 
 
  -**main()**:\
 The function main extends the recursive_function for the user. Through this funtion, the user can call for flags '**-explain**', '**- file INPUT OUTPUT**', '**-hint N**', and '**-profile**'. These flags can be run simultaneously.\
-      Individually, when the flags are called:\
-        - **explain**   
-            prints the solution to the inputted grid and a set of instructions for solving the puzzzle\
-        - **file INPUT OUTPUT**  
-            reads a grid from an inputted file, solves the grid, and saves the grid to another file named 'OUTPUT'.\
-        - **hint N**   
-            returns a partially filled grid by 'N' number of values.\
-        - **profile** 
-            measures the time performance of the solver, for grids of various sizes and difficulties. It then averages the performance of the solver, summarises the results and returns a plot conveying these results.
+  Individually, when the flags are called:\
+  - **explain**   
+    prints the solution to the inputted grid and a set of instructions for solving the puzzzle\
+  - **file INPUT OUTPUT**  
+    reads a grid from an inputted file, solves the grid, and saves the grid to another file named 'OUTPUT'.\
+  - **hint N**   
+    returns a partially filled grid by 'N' number of values.\
+  - **profile** 
+    measures the time performance of the solver, for grids of various sizes and difficulties. It then averages the performance of the solver, summarises the results and returns a plot conveying these results.
   
   
 ### Usage
