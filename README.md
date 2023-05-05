@@ -17,39 +17,50 @@ Wavefront uses the wavefront propogation method, where we find the locations in 
 The function main extends the recursive_function for the user. Through this funtion, the user can call for flags '**-explain**', '**- file INPUT OUTPUT**', '**-hint N**', and '**-profile**'. These flags can be run simultaneously.
 
   Individually, when the flag is called:\
-    -* *-explain*   prints the solution to the inputted grid and a set of instructions for solving the puzzzle\
-    -* *-file INPUT OUTPUT*    reads a grid from an inputted file, solves the grid, and saves the grid to another file named 'OUTPUT'.\
-    -* *-hint N*   returns a partially filled grid by 'N' number of values.\
-    -* *-profile*   measures the time performance of the solver, for grids of various sizes and difficulties. It then averages the performance of the solver, summarises the results and returns a plot conveying these results.
+    - **-explain**\   
+        prints the solution to the inputted grid and a set of instructions for solving the puzzzle\
+    - **-file INPUT OUTPUT**\    
+        reads a grid from an inputted file, solves the grid, and saves the grid to another file named 'OUTPUT'.\
+    -**-hint N**\   
+        returns a partially filled grid by 'N' number of values.\
+    -**-profile**\   
+        measures the time performance of the solver, for grids of various sizes and difficulties. It then averages the performance of the solver, summarises the results and returns a plot conveying these results.
+  
   
 ### Usage
+
 1) To choose the algorithm with which to solve the grid:\
     -open python script\
     -edit within the function 'solve()':\
         ->for the **recursive** method: uncomment 'return recursive_solve(...)'. comment out other return lines for the 'solve' function \
         -> for the **wavefront** method: uncomment either 'return wavefront(...)', or 'return list_solve(...)'. comment out the other two return lines under            the 'solve' function
         
+        
 2) Run the file from terminal. 
 
+
 3) To call for a flag:\
+
     In terminal, print "CW3.py -flag inputfile.txt output.txt"
     
     i.e.\
-    -for **explain**(to print solution and set of instructions to solve):\
+    -for **explain**  (to print solution and set of instructions to solve):\
      In terminal, print "CW3.py -explain inputfile.txt output.txt
      
-    -for **file INPUT OUTPUT**(to read sudoku grid from inputted file and save solved grid to output file):\
+    -for **file INPUT OUTPUT**  (to read sudoku grid from inputted file and save solved grid to output file):\
      In terminal, print "CW3.py -file input.txt output.txt"
      
-     -for **hint N**(return a grid filled with *n* previously unknown locations):\
+     -for **hint N**  (return a grid filled with *n* previously unknown locations):\
      In terminal, print "CW3.py -hint N input.txt output.txt"\
      e.g. for a number of 5 hints:\
      In terminal, print "CW3.py -hint 5 input.txt output.txt"
      
-     -for **profile**(measure time performance for solver over various grids, return a plot of average performance):\
+     -for **profile**  (measure time performance for solver over various grids, return a plot of average performance):\
      In terminal, print "CW3.py -profile input.txt output.txt"
      
+     
  4) To call for multiple flags:\
+ 
     In terminal, the desired flags must be called in this order:\
     -hint  -explain  -file 
     
