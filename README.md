@@ -1,7 +1,7 @@
 # CW3
 This project codes for a Sudoku Solver. The code solves unsolved grids from an inputted file through terminal, as well as example grids included within the script.
 
-<sub> By Charlie Creasy, Finlay, Oliver F, Jyotika Kannan </sub>
+<sub> By Charlie Creasy, Finlay Michael, Oliver French, Jyotika Kannan </sub>
 
 
 ### Algorithms
@@ -40,22 +40,22 @@ The function main extends the recursive_function for the user. Through this funt
 
 3) To call for a flag:
 
-    In terminal, print "CW3.py -flag"
+    In terminal, run "CW3.py -flag"
     
     i.e.\
     -for **explain**  (to print solution and set of instructions to solve):\
-     In terminal, print "CW3.py -explain"
+     In terminal, run "CW3.py -explain"
      
     -for **file INPUT OUTPUT**  (to read sudoku grid from inputted file and save solved grid to output file):\
-     In terminal, print "CW3.py -file input.txt output.txt"
+     In terminal, run "CW3.py -file input.txt output.txt"
      
      -for **hint N**  (return a grid filled with *n* previously unknown locations):\
-     In terminal, print "CW3.py -hint N"\
+     In terminal, run "CW3.py -hint N"\
      e.g. for a number of 5 hints:\
-     In terminal, print "CW3.py -hint 5"
+     In terminal, run "CW3.py -hint 5"
      
      -for **profile**  (measure time performance for solver over various grids, return a plot of average performance):\
-     In terminal, print "CW3.py -profile"
+     In terminal, run "CW3.py -profile"
      
      
  4) To call for multiple flags:
@@ -65,16 +65,16 @@ The function main extends the recursive_function for the user. Through this funt
     
     i.e.\
      -for hint + file:\
-      print "CW3.py -hint 5 -file input.txt output.txt'
+      run "CW3.py -hint 5 -file input.txt output.txt'
       
      -for hint + explain:\
-      print "CW3.py -hint 5 -explain"
+      run "CW3.py -hint 5 -explain"
       
      -for explain + file:\
-      print "CW3.py -explain -file input.txt output.txt'
+      run "CW3.py -explain -file input.txt output.txt'
       
      -for hint + explain + file\
-      print "Script.py -hint 5 -explain -file input.txt output.txt'
+      run "Script.py -hint 5 -explain -file input.txt output.txt'
         
         
        
