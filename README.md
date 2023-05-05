@@ -1,9 +1,9 @@
-### CW3
-This project codes for a Sudoku Solver. The code solves unsolved grids from an inputted file through terminal, as well as example grids included within the script. 
+# CW3
+This project codes for a Sudoku Solver. The code solves unsolved grids from an inputted file through terminal, as well as example grids included within the script.\ 
 <sub> By Charlie Creasy, Finlay, Oliver F, Jyotika Kannan </sub>
 
 
-## Algorithms
+### Algorithms
 The Solver contains three main methods for the solving of a grid, using three main functions:
 
  -**recursive_solve()**
@@ -21,7 +21,7 @@ The function main extends the recursive_function for the user. Through this funt
     -'* *-hint N* ' returns a partially filled grid by 'N' number of values.\
     -'* *-profile* ' measures the time performance of the solver, for grids of various sizes and difficulties. It then averages the performance of the solver, summarises the results and returns a plot conveying these results.
   
-## Usage
+### Usage
 1) To choose the algorithm with which to solve the grid:\
     -open python script\
     -edit within the function 'solve()':\
