@@ -8,7 +8,7 @@ This project codes for a Sudoku Solver. The code solves unsolved grids from an i
 The Solver contains three main methods for the solving of a grid, using three main functions:
 
  -**recursive_solve()**:\
-This function uses the method of finding the empty location in the grid with the least possible values for that location through comparing the possible values with other known locations in the same row, column, or square. THrough this comparison, many possible values for each cell are eliminated, and reduces the number of recursions neccesary. This increases the solvers efficiency. This method is then repeated exhaustedly iterating through all possible solutions, until a solved grid is found and returned.
+This function uses the method of finding the empty location in the grid with the least possible values for that location through comparing the possible values with other known locations in the same row, column, or square. Through this comparison, many possible values for each cell are eliminated, and reduces the number of recursions neccesary. This increases the solvers efficiency. This method is then repeated exhaustedly iterating through all possible solutions, until a solved grid is found and returned.
 
  -**wavefront()** or **list_solve()**:\
 Wavefront uses the wavefront propogation method, where we find the locations in the grid with the least possible values, i.e. one possible value - as these values are placed in their locations in the grid, they are simultaneously elimated from the list of possible values for other unknown cells in the same row, column or square. This process is then repeated until a solved grid found, and returned.
