@@ -40,7 +40,7 @@ The function main extends the recursive_function for the user. Through this funt
 
 3) To call for a flag:
 
-    In terminal, print "CW3.py -flag inputfile.txt output.txt"
+    In terminal, print "CW3.py -flag"
     
     i.e.\
     -for **explain**  (to print solution and set of instructions to solve):\
@@ -50,7 +50,7 @@ The function main extends the recursive_function for the user. Through this funt
      In terminal, print "CW3.py -file input.txt output.txt"
      
      -for **hint N**  (return a grid filled with *n* previously unknown locations):\
-     In terminal, print "CW3.py -hint N input.txt output.txt"\
+     In terminal, print "CW3.py -hint N"\
      e.g. for a number of 5 hints:\
      In terminal, print "CW3.py -hint 5"
      
