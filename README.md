@@ -29,10 +29,10 @@ The function main extends the recursive_function for the user. Through this funt
 ### Usage
 
 1) To choose the algorithm with which to solve the grid:\
-    -open python script\
-    -edit within the function 'solve()':\
-        ->for the **recursive** method: uncomment 'return recursive_solve(...)'. comment out other return lines for the 'solve' function \
-        -> for the **wavefront** method: uncomment either 'return wavefront(...)', or 'return list_solve(...)'. comment out the other two return lines under            the 'solve' function
+    - open python script\
+    - edit within the function 'solve()':\
+      - for the **recursive** method: uncomment 'return recursive_solve(...)'. comment out other return lines for the 'solve' function \
+      - for the **wavefront** method: uncomment either 'return wavefront(...)', or 'return list_solve(...)'. comment out the other two return lines under            the 'solve' function
         
         
 2) Run the file from terminal. 
